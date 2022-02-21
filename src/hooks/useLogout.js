@@ -15,6 +15,7 @@ export const useLogout = () => {
     try {
       //get the user id of the user currently logged in
       const { uid } = user;
+
       //set user to offline when they logout
       await projectFirestore
         .collection("users")
