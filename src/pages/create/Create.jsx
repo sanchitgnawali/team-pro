@@ -14,13 +14,15 @@ const categories = [
 
 export default function Create() {
   const { documents } = useCollection("users");
-  const [users, setUsers] = useState([]);
 
+  // Component States
+  const [users, setUsers] = useState([]);
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [category, setCategory] = useState("");
   const [assignedUsers, setAssignedUsers] = useState([]);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     if (documents) {
@@ -36,6 +38,19 @@ export default function Create() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFormError(null);
+
+    if (!category) {
+      setFormError("Project category not selected");
+      return;
+    }
+    if (assignedUsers.length < 1) {
+      setFormError(
+        "Please assign users to the project before submitting the form."
+      );
+      return;
+    }
+
     console.log(name, details, dueDate, category.value, assignedUsers);
   };
 
@@ -97,6 +112,7 @@ export default function Create() {
           />
         </label>
         <button className="btn">Add Project</button>
+        {formError && <p className="error">{formError}</p>}
       </form>
     </div>
   );
