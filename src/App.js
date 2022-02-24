@@ -13,22 +13,36 @@ import Project from "./pages/project/Project";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 
+import { useAuthContext } from "./hooks/useAuthContext";
+
 function App() {
+  const { user, authIsReady } = useAuthContext();
   return (
     <div className="App">
-      <BrowserRouter>
-        <Sidebar />
-        <div className="container">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/create" element={<Create />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/projects/:id" element={<Project />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      {authIsReady && (
+        <BrowserRouter>
+          <Sidebar />
+          <div className="container">
+            <Navbar />
+            <Routes>
+              <Route path="/" element={user ? <Dashboard /> : <Login />} />
+              <Route path="/create" element={user ? <Create /> : <Login />} />
+              <Route
+                path="/login"
+                element={!user ? <Login /> : <Dashboard />}
+              />
+              <Route
+                path="/signup"
+                element={!user ? <Signup /> : <Dashboard />}
+              />
+              <Route
+                path="/projects/:id"
+                element={user ? <Project /> : <Login />}
+              />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      )}
     </div>
   );
 }
